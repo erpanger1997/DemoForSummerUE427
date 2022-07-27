@@ -24,6 +24,7 @@
 #include <Components/AudioComponent.h>
 #include <Kismet/KismetMathLibrary.h>
 #include <PhysicalMaterials/PhysicalMaterial.h>
+#include <Common/DSHelper.h>
 //#include <Hand/DSHandObject.h>
 
 // Sets default values
@@ -41,9 +42,9 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FQuat::MakeFromEuler(FVector(0.f, 0.f, -90.f)));
 
-	//static ConstructorHelpers::FClassFinder<UAnimInstance> StaticAnimThird(
-	//	TEXT("AnimBlueprint'/Game/BluePrints/Animation/ABP_DSPlayerCharacter.ABP_DSPlayerCharacter_C'"));
-	//GetMesh()->AnimClass = StaticAnimThird.Class;
+	static ConstructorHelpers::FClassFinder<UAnimInstance> StaticAnimThird(
+		TEXT("AnimBlueprint'/Game/Character/BP_PlayerAnim.BP_PlayerAnim_C'"));
+	GetMesh()->AnimClass = StaticAnimThird.Class;
 
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -88,18 +89,18 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 
 	KnifeSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("KnifeSkeletalMeshComponent"));
 	KnifeSkeletalMeshComponent->SetupAttachment(GetMesh(), KnifeSocketName);
-	KnifeSkeletalMeshComponent->SetVisibility(false);*/
+	KnifeSkeletalMeshComponent->SetVisibility(false);
 
-	/*FPSCameraSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FPSCameraSceneComponent"));
+	FPSCameraSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FPSCameraSceneComponent"));
 	FPSCameraSceneComponent->SetupAttachment(RootComponent);
 
 	DeathAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("DeathAudioComponent"));
 	DeathAudioComponent->SetupAttachment(RootComponent);
-	DeathAudioComponent->SetAutoActivate(false);
+	DeathAudioComponent->SetAutoActivate(false);*/
 
-	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	//HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 
-	HitEffectComponent = CreateDefaultSubobject<UHitEffectComponent>(TEXT("HitEfectComponent"));*/
+	//HitEffectComponent = CreateDefaultSubobject<UHitEffectComponent>(TEXT("HitEfectComponent"));*/
 
 }
 
@@ -108,6 +109,7 @@ void ADSPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	DSHelper::Debug(FString::Printf(TEXT("BeginPlay")), 5);
 	// 实例化控制器指针
 	//SPController = Cast<ADSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
@@ -124,12 +126,12 @@ void ADSPlayerCharacter::BeginPlay()
 	GrenadeCount = MaxGrenadeCount; // 设置手雷数量
 
 	// 开始不显示狙击镜下的widget
-	CurrentSniperUserWidget = CreateWidget(GetWorld(), SniperUserWidgetClass);
+	/*CurrentSniperUserWidget = CreateWidget(GetWorld(), SniperUserWidgetClass);
 	CurrentSniperUserWidget->AddToViewport();
 	CurrentSniperUserWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	CurrentGameUserWidget = CreateWidget(GetWorld(), GameUserWidgetClass);
-	CurrentGameUserWidget->AddToViewport();
+	CurrentGameUserWidget->AddToViewport();*/
 
 	// HealthComponent->OnHealthChanged.AddDynamic(this, &AMultiShootGameCharacter::OnHealthChanged);
 
@@ -271,7 +273,6 @@ void ADSPlayerCharacter::StopFire()
 
 void ADSPlayerCharacter::MoveForward(float Value)
 {
-
 	/*if (Value != 0.f && Controller) {
 		const FRotator ControlRot = Controller->GetControlRotation();
 		FVector Direction = FRotationMatrix(ControlRot).GetScaledAxis(EAxis::X);
@@ -493,7 +494,7 @@ void ADSPlayerCharacter::BeginSecondWeaponReload()
 	const FLatentActionInfo LatentActionInfo;
 	UKismetSystemLibrary::Delay(GetWorld(), 0.5f, LatentActionInfo);
 
-	PlayAnimMontage(SecondWeaponReloadAnimMontage);
+	/*PlayAnimMontage(SecondWeaponReloadAnimMontage);*/
 }
 
 void ADSPlayerCharacter::EndReload()
@@ -573,7 +574,7 @@ void ADSPlayerCharacter::ToggleMainWeapon()
 
 	HandleWalkSpeed();
 
-	PlayAnimMontage(WeaponOutAnimMontage);
+	//PlayAnimMontage(WeaponOutAnimMontage);
 }
 
 void ADSPlayerCharacter::ToggleSecondWeapon()
@@ -600,7 +601,7 @@ void ADSPlayerCharacter::ToggleSecondWeapon()
 
 	HandleWalkSpeed();
 
-	PlayAnimMontage(WeaponOutAnimMontage);
+	//PlayAnimMontage(WeaponOutAnimMontage);
 }
 
 void ADSPlayerCharacter::ToggleThirdWeapon()
@@ -627,7 +628,7 @@ void ADSPlayerCharacter::ToggleThirdWeapon()
 
 	HandleWalkSpeed();
 
-	PlayAnimMontage(WeaponOutAnimMontage);
+	//PlayAnimMontage(WeaponOutAnimMontage);
 }
 
 void ADSPlayerCharacter::ToggleWeaponUp()
@@ -711,10 +712,10 @@ void ADSPlayerCharacter::Hit()
 {
 	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(KnifeCameraShakeClass);
 
-	const FVector HitLocation = KnifeSkeletalMeshComponent->GetSocketLocation(HitSocketName);
-	const FRotator HitRotation = KnifeSkeletalMeshComponent->GetComponentRotation();
-	FHitResult HitResult;
-	const TArray<AActor*> IgnoreActors;
+	//const FVector HitLocation = KnifeSkeletalMeshComponent->GetSocketLocation(HitSocketName);
+	//const FRotator HitRotation = KnifeSkeletalMeshComponent->GetComponentRotation();
+	//FHitResult HitResult;
+	//const TArray<AActor*> IgnoreActors;
 	//if (UKismetSystemLibrary::SphereTraceSingle(GetWorld(), HitLocation, HitLocation, 50.f, TraceType_Weapon, false,
 	//	IgnoreActors, EDrawDebugTrace::None, HitResult, true))
 	//{
@@ -756,14 +757,14 @@ void ADSPlayerCharacter::BeginThrowGrenade()
 
 	AttachWeapon(false, false, false);
 
-	PlayAnimMontage(ThrowGrenadeAnimMontage);
+	//PlayAnimMontage(ThrowGrenadeAnimMontage);
 }
 
 void ADSPlayerCharacter::EndThrowGrenade()
 {
 	bToggleWeapon = true;
 
-	PlayAnimMontage(WeaponOutAnimMontage);
+	//PlayAnimMontage(WeaponOutAnimMontage);
 
 	ToggleUseControlRotation(false);
 }
@@ -794,23 +795,23 @@ void ADSPlayerCharacter::ThrowGrenade()
 		SpawnGrenade();
 	}
 
-	PlayAnimMontage(ThrowGrenadeAnimMontage, 1, FName("Throw"));
+	//PlayAnimMontage(ThrowGrenadeAnimMontage, 1, FName("Throw"));
 }
 
 void ADSPlayerCharacter::ThrowGrenadeOut()
 {
-	const FVector StartLocation = GrenadeSceneComponent->GetComponentLocation();
+	//const FVector StartLocation = GrenadeSceneComponent->GetComponentLocation();
 
 	const FVector CameraLocation = CameraComponent->GetComponentLocation();
 	const FRotator CameraRotation = CameraComponent->GetComponentRotation();
 	const FVector TargetLocation = CameraLocation + CameraRotation.Vector() * 3000.f;
 
-	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, TargetLocation);
+	//const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, TargetLocation);
 
 	/*CurrentGrenade->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 	CurrentGrenade->ThrowGrenade(LookAtRotation, bFastRun || bJump);*/
 
-	GrenadeCount = FMath::Clamp(GrenadeCount - 1, 0, MaxGrenadeCount);
+	//GrenadeCount = FMath::Clamp(GrenadeCount - 1, 0, MaxGrenadeCount);
 }
 
 void ADSPlayerCharacter::SpawnGrenade()
@@ -843,7 +844,7 @@ void ADSPlayerCharacter::KnifeAttack()
 	EndAction();
 
 	GetCharacterMovement()->SetMovementMode(MOVE_None);
-	PlayAnimMontage(KnifeAttackAnimMontage, 2.0f);
+	//PlayAnimMontage(KnifeAttackAnimMontage, 2.0f);
 }
 
 void ADSPlayerCharacter::BeginKnifeAttack()
@@ -852,7 +853,7 @@ void ADSPlayerCharacter::BeginKnifeAttack()
 
 	AttachWeapon(false, false, false);
 
-	KnifeSkeletalMeshComponent->SetVisibility(true);
+	//KnifeSkeletalMeshComponent->SetVisibility(true);
 }
 
 void ADSPlayerCharacter::EndKnifeAttack()
@@ -863,9 +864,9 @@ void ADSPlayerCharacter::EndKnifeAttack()
 
 	bToggleWeapon = true;
 
-	KnifeSkeletalMeshComponent->SetVisibility(false);
+	//KnifeSkeletalMeshComponent->SetVisibility(false);
 
-	PlayAnimMontage(WeaponOutAnimMontage);
+	//PlayAnimMontage(WeaponOutAnimMontage);
 }
 
 void ADSPlayerCharacter::LookUpAtRate(float Value)
@@ -883,15 +884,15 @@ void ADSPlayerCharacter::TurnAtRate(float Value)
 	AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void ADSPlayerCharacter::OnStartJump()
-{
-	bPressedJump = true;
-}
-
-void ADSPlayerCharacter::OnStopJump()
-{
-	bPressedJump = false;
-}
+//void ADSPlayerCharacter::OnStartJump()
+//{
+//	bPressedJump = true;
+//}
+//
+//void ADSPlayerCharacter::OnStopJump()
+//{
+//	bPressedJump = false;
+//}
 
 bool ADSPlayerCharacter::CheckStatus(bool CheckAimed, bool CheckThrowGrenade)
 {
@@ -943,14 +944,14 @@ void ADSPlayerCharacter::HandleWalkSpeed()
 
 void ADSPlayerCharacter::AttachWeapon(bool MainWeapon, bool SecondWeapon, bool ThirdWeapon)
 {
-	MainWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
-		MainWeapon ? MainWeaponSocketName : BackMainWeaponSocketName);
+	//MainWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
+	//	MainWeapon ? MainWeaponSocketName : BackMainWeaponSocketName);
 
-	SecondWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
-		SecondWeapon ? SecondWeaponSocketName : BackSecondWeaponSocketName);
+	//SecondWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale,
+	//	SecondWeapon ? SecondWeaponSocketName : BackSecondWeaponSocketName);
 
-	ThirdWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
-		ThirdWeapon ? ThirdWeaponSocketName : BackThirdWeaponSocketName);
+	//ThirdWeaponSceneComponent->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+	//	ThirdWeapon ? ThirdWeaponSocketName : BackThirdWeaponSocketName);
 }
 
 void ADSPlayerCharacter::ToggleUseControlRotation(bool Enabled)
@@ -982,7 +983,7 @@ void ADSPlayerCharacter::Death()
 	CurrentSecondWeapon->EnablePhysicsSimulate();
 	CurrentThirdWeapon->EnablePhysicsSimulate();*/
 
-	DeathAudioComponent->Play();
+	//DeathAudioComponent->Play();
 }
 // Called when the game starts or when spawned
 // Called every frame
@@ -993,17 +994,17 @@ void ADSPlayerCharacter::Tick(float DeltaTime)
 
 	if (bAimed)
 	{
-		const FVector StartLocation = FPSCameraSceneComponent->GetComponentLocation();
+	//	const FVector StartLocation = FPSCameraSceneComponent->GetComponentLocation();
 
-		const FVector CameraLocation = CameraComponent->GetComponentLocation();
+		/*const FVector CameraLocation = CameraComponent->GetComponentLocation();
 		const FRotator CameraRotation = CameraComponent->GetComponentRotation();
 		const FVector TargetLocation = CameraLocation + CameraRotation.Vector() * 3000.f;
 
 		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, TargetLocation);
 
-		const FRotator TargetRotation = FRotator(0, LookAtRotation.Yaw - 90.f, LookAtRotation.Pitch * -1.f);
+		const FRotator TargetRotation = FRotator(0, LookAtRotation.Yaw - 90.f, LookAtRotation.Pitch * -1.f);*/
 
-		FPSCameraSceneComponent->SetWorldRotation(TargetRotation);
+	//	FPSCameraSceneComponent->SetWorldRotation(TargetRotation);
 	}
 
 	/*if (WeaponMode == EWeaponMode::MainWeapon && (bUseControlRotation ||
@@ -1019,7 +1020,9 @@ void ADSPlayerCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+	DSHelper::Debug(FString::Printf(TEXT("SetupPlayerInputComponent")), 5);
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	check(PlayerInputComponent);
 
 	// Bind movement events
@@ -1030,8 +1033,8 @@ void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAxis("TurnRate", this, &ADSPlayerCharacter::TurnAtRate);
 
 	// Bind jump events
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ADSPlayerCharacter::OnStartJump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ADSPlayerCharacter::OnStopJump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAction("FastRun", IE_Pressed, this, &ADSPlayerCharacter::BeginFastRun);
 	PlayerInputComponent->BindAction("FastRun", IE_Released, this, &ADSPlayerCharacter::EndFastRun);
 
@@ -1066,10 +1069,10 @@ void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
-USceneComponent* ADSPlayerCharacter::GetFPSCameraSceneComponent() const
-{
-	return FPSCameraSceneComponent;
-}
+//USceneComponent* ADSPlayerCharacter::GetFPSCameraSceneComponent() const
+//{
+//	return FPSCameraSceneComponent;
+//}
 
 UCameraComponent* ADSPlayerCharacter::GetCameraComponent() const
 {

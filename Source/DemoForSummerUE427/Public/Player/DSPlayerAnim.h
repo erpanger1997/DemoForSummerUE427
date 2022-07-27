@@ -17,6 +17,7 @@ class DEMOFORSUMMERUE427_API UDSPlayerAnim : public UAnimInstance
 public:
 
 	UDSPlayerAnim();
+	virtual void NativeInitializeAnimation() override;
 
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
@@ -25,6 +26,8 @@ protected:
 	void InitSPCharacter();
 
 	void UpdateParameter();
+
+	void UpdateAimYaw(float DeltaSeconds);
 
 	void UpdateMontage();
 
@@ -47,7 +50,19 @@ public:
 		float Speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+		float Direction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+		float AimYaw;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+		float HalfHeight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		bool HasVelocity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+		bool isCrouching;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		bool IsInAir;
@@ -64,8 +79,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		bool IsFalling;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
-		float TimeToJumpApex;
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+		float TimeToJumpApex;*/
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		float GroundDistance;
@@ -73,14 +88,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		FVector WorldLocation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+	/*UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
 		float DisplacementSinceLastUpdate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
-		float DisplacementSpeed;
+		float DisplacementSpeed;*/
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
-		bool IsFirstUpdate;
+	//UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = PlayAnim)
+	//	bool IsFirstUpdate;
 
 protected:
 

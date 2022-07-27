@@ -9,12 +9,18 @@
 #include <CollisionQueryParams.h>
 #include <GameFramework/Character.h>
 #include "Components/CapsuleComponent.h"
+#include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
 
 
 UDSPlayerAnim::UDSPlayerAnim()
 {
 	Speed = 0.f;
+	Direction = 0.f;
+	AimYaw = 0.f;
+	HalfHeight = 0.f;
 	HasVelocity = false;
+	isCrouching = false;
 
 	SpineRotator = FRotator(0.f, 0.f, 0.f);
 
@@ -22,20 +28,34 @@ UDSPlayerAnim::UDSPlayerAnim()
 	IsOnGround = true;
 	IsJumping = false;
 	IsFalling = false;
-	TimeToJumpApex = 0.f;
-	IsFirstUpdate = true;
+	// TimeToJumpApex = 0.f;
+	/*IsFirstUpdate = true;
 	DisplacementSinceLastUpdate = 0.f;
-	DisplacementSpeed = 0.f;
+	DisplacementSpeed = 0.f;*/
+}
+
+void UDSPlayerAnim::NativeInitializeAnimation()
+{	
+	Super::NativeInitializeAnimation();
+	InitSPCharacter();
+	if (!SPCharacter->GetCapsuleComponent()) {
+
+		return;
+	}
+	//
+	// HalfHeight = SPCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 }
 
 void UDSPlayerAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
 	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "ATrap::SteppedToTrigger_Implementation -- AddOnScreenDebugMessage!!!!");
-	InitSPCharacter();
+	// InitSPCharacter();
 
 	UpdateParameter();
 
 	UpdateMontage();
+
+	// UpdateAimYaw(DeltaSeconds);
 
 	UpdateLocationData(DeltaSeconds);
 }
@@ -57,8 +77,13 @@ void UDSPlayerAnim::UpdateParameter()
 		return;
 	}
 
+	HalfHeight = SPCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	Speed = SPCharacter->GetVelocity().Size();
+	Direction = CalculateDirection(SPCharacter->GetVelocity(), SPCharacter->K2_GetActorRotation());
 	HasVelocity = Speed > 0 ? true : false;
+	isCrouching = SPCharacter->GetMovementComponent()->IsCrouching();
+	IsFalling = SPCharacter->GetMovementComponent()->IsFalling();
+
 	float SpineDir = SPCharacter->GetActorRotation().Yaw - 90.f;
 	if (SpineDir > 180.f) {
 		SpineDir -= 360.f;
@@ -67,10 +92,18 @@ void UDSPlayerAnim::UpdateParameter()
 		SpineDir += 360.f;
 	}
 	SpineRotator = FRotator(0.f, SpineDir, 90.f);
-	UpdateJumpFallData();
+	// UpdateJumpFallData();
 	UpdateGroundDistance();
 	DSHelper::Debug(FString::Printf(TEXT("-- speed = %f"), Speed), 0.1);
 	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("-- speed = %f"), Speed));
+}
+
+void UDSPlayerAnim::UpdateAimYaw(float DeltaSeconds)
+{
+	FRotator DeltaRotation = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetControlRotation() - SPCharacter->K2_GetActorRotation();
+	DeltaRotation.Normalize();
+	FRotator CurrentRotation = UKismetMathLibrary::MakeRotator(0, 0, AimYaw);
+	AimYaw = UKismetMathLibrary::ClampAngle(UKismetMathLibrary::RInterpTo(CurrentRotation, DeltaRotation, DeltaSeconds, 15.0).Yaw, -90.f, 90.f);
 }
 
 void UDSPlayerAnim::UpdateMontage()
@@ -85,7 +118,7 @@ void UDSPlayerAnim::AllowViewChange(bool IsAllow)
 
 void UDSPlayerAnim::UpdateJumpFallData()
 {
-	IsInAir = SPCharacter->GetCharacterMovement()->IsFalling();
+	/*IsInAir = SPCharacter->GetCharacterMovement()->IsFalling();
 	IsOnGround = SPCharacter->GetCharacterMovement()->IsMovingOnGround();
 	IsJumping = false;
 	IsJumping = false;
@@ -94,15 +127,15 @@ void UDSPlayerAnim::UpdateJumpFallData()
 			IsJumping = true;
 		}
 		else IsFalling = true;
-	}
+	}*/
 	//IsJumping = SPCharacter->GetCharacterMovement()->IsFalling() && SPCharacter->GetVelocity().Z > 0.f;
 	//IsFalling = !IsJumping;
-	if (IsJumping) TimeToJumpApex = 0.f;
+	/*if (IsJumping) TimeToJumpApex = 0.f;
 	else {
 		float GravityZ = SPCharacter->GetCharacterMovement()->GetGravityZ();
 		TimeToJumpApex = (0 - SPCharacter->GetVelocity().Z) / GravityZ;
-	}
-	DSHelper::Debug(FString::Printf(TEXT("-- TimeToJumpApex = %f"), TimeToJumpApex), 0.1);
+	}*/
+	//DSHelper::Debug(FString::Printf(TEXT("-- TimeToJumpApex = %f"), TimeToJumpApex), 0.1);
 }
 
 void UDSPlayerAnim::UpdateGroundDistance()
@@ -154,7 +187,7 @@ void UDSPlayerAnim::UpdateLocationData(float DeltaSeconds)
 	DeltaDistance = SPCharacter->GetActorLocation() - WorldLocation;
 	WorldLocation = SPCharacter->GetActorLocation();
 
-	DisplacementSinceLastUpdate = sqrt(FMath::Square(DeltaDistance.X) + FMath::Square(DeltaDistance.Y));
+	/*DisplacementSinceLastUpdate = sqrt(FMath::Square(DeltaDistance.X) + FMath::Square(DeltaDistance.Y));
 
 	DisplacementSpeed = DisplacementSinceLastUpdate / DeltaSeconds;
 	if (IsFirstUpdate) {
@@ -162,5 +195,5 @@ void UDSPlayerAnim::UpdateLocationData(float DeltaSeconds)
 		DisplacementSpeed = 0.f;
 		IsFirstUpdate = false;
 	}
-	DSHelper::Debug(FString::Printf(TEXT("-- DisplacementSpeed = %f"), DisplacementSpeed), 0.1);
+	DSHelper::Debug(FString::Printf(TEXT("-- DisplacementSpeed = %f"), DisplacementSpeed), 0.1);*/
 }

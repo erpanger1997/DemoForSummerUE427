@@ -30,7 +30,7 @@ public:
 
 	void BeginReload();
 
-	USceneComponent* GetFPSCameraSceneComponent() const;
+	//USceneComponent* GetFPSCameraSceneComponent() const;
 
 	UCameraComponent* GetCameraComponent() const;
 
@@ -80,91 +80,91 @@ private:
 
 	void ToggleCrouch();				// 切换下蹲姿势
 
-	void BeginAim();
+	void BeginAim();					// 开始瞄准
 
-	void EndAim();
+	void EndAim();						// 结束瞄准
 
-	void LookUpAtRate(float Value);
+	void LookUpAtRate(float Value);		// 视角纵向转换
 	
-	void Turn(float Value);
+	void Turn(float Value);				// 视角横向转换
 	
-	void TurnAtRate(float Value);
+	void TurnAtRate(float Value);		// 视角横向转换
 	
-	void OnStartJump();
+	// void OnStartJump();					// 开始跳跃
 	
-	void OnStopJump();
+	// void OnStopJump();					// 结束跳跃
 
-	void BeginSecondWeaponReload();
-
-	UFUNCTION(BlueprintCallable)
-		void EndReload();
+	void BeginSecondWeaponReload();			// 第二把武器重新装弹
 
 	UFUNCTION(BlueprintCallable)
-		void ReloadShowClip(bool Enabled);
-
-	void ToggleMainWeapon();
-
-	void ToggleSecondWeapon();
-
-	void ToggleThirdWeapon();
-
-	void ToggleWeaponUp();
-
-	void ToggleWeaponDown();
+		void EndReload();					// 结束装弹
 
 	UFUNCTION(BlueprintCallable)
-		void ToggleWeaponBegin();
+		void ReloadShowClip(bool Enabled);	// 重新装弹后显示弹夹
+
+	void ToggleMainWeapon();				// 切换为主武器
+
+	void ToggleSecondWeapon();				// 切换为副武器
+
+	void ToggleThirdWeapon();				// 切换为手枪
+
+	void ToggleWeaponUp();					// 向上切换武器
+
+	void ToggleWeaponDown();				// 向下切换武器
 
 	UFUNCTION(BlueprintCallable)
-		void ToggleWeaponEnd();
+		void ToggleWeaponBegin();			// 开始切换武器
 
 	UFUNCTION(BlueprintCallable)
-		void Hit();
+		void ToggleWeaponEnd();				// 结束切换武器
 
 	UFUNCTION(BlueprintCallable)
-		void FillUpWeaponBullet();
-
-	void ToggleUseControlRotation(bool Enabled);
+		void Hit();							// 射击
 
 	UFUNCTION(BlueprintCallable)
-		bool CheckStatus(bool CheckAimed, bool CheckThrowGrenade);
+		void FillUpWeaponBullet();			// 装满所有子弹
+
+	void ToggleUseControlRotation(bool Enabled);	// 切换是否能够控制转向
+
+	UFUNCTION(BlueprintCallable)
+		bool CheckStatus(bool CheckAimed, bool CheckThrowGrenade);	//	 状态检查
 
 	/*UFUNCTION()
 		void OnHealthChanged(UHealthComponent* OwningHealthComponent, float Health, float HealthDelta,
 			const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);*/
 
 
-	void BeginThrowGrenade();
+	void BeginThrowGrenade();				// 开始扔雷
 
 	UFUNCTION(BlueprintCallable)
-		void EndThrowGrenade();
+		void EndThrowGrenade();				// 结束扔雷
 
-	void ThrowGrenade();
-
-	UFUNCTION(BlueprintCallable)
-		void ThrowGrenadeOut();
+	void ThrowGrenade();					// 扔雷，用于播放动画
 
 	UFUNCTION(BlueprintCallable)
-		void SpawnGrenade();
-
-	void KnifeAttack();
+		void ThrowGrenadeOut();				// 扔出手雷
 
 	UFUNCTION(BlueprintCallable)
-		void BeginKnifeAttack();
+		void SpawnGrenade();				// 生成手雷
+
+	void KnifeAttack();						// 近战攻击
 
 	UFUNCTION(BlueprintCallable)
-		void EndKnifeAttack();
+		void BeginKnifeAttack();			// 开始近战攻击
 
 	UFUNCTION(BlueprintCallable)
-		void EndAction();
-
-	void HandleWalkSpeed();
+		void EndKnifeAttack();				// 结束近战攻击
 
 	UFUNCTION(BlueprintCallable)
-		void AttachWeapon(bool MainWeapon, bool SecondWeapon, bool ThirdWeapon);
+		void EndAction();					// 结束当前动作
+
+	void HandleWalkSpeed();					// 设置行进速度
 
 	UFUNCTION(BlueprintCallable)
-		void Death();
+		void AttachWeapon(bool MainWeapon, bool SecondWeapon, bool ThirdWeapon);	// 装备武器
+
+	UFUNCTION(BlueprintCallable)
+		void Death();						// 死亡
 
 public:
 
@@ -179,7 +179,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		UCameraComponent* CameraComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		USceneComponent* FPSCameraSceneComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
@@ -198,7 +198,7 @@ protected:
 		USkeletalMeshComponent* KnifeSkeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		UAudioComponent* DeathAudioComponent;
+		UAudioComponent* DeathAudioComponent;*/
 
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		UHealthComponent* HealthComponent;
@@ -218,7 +218,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<AMultiShootGameGrenade> GrenadeClass;*/
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<UDamageType> DamageTypeClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
@@ -246,7 +246,7 @@ protected:
 		FName KnifeSocketName = "KnifeSocket";
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
-		FName HitSocketName = "HitSocket";
+		FName HitSocketName = "HitSocket";*/
 
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<AMultiShootGameFPSCamera> FPSCameraClass;*/
@@ -263,29 +263,29 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Character)
 		TSubclassOf<UMatineeCameraShake> HitCameraShakeClass;*/
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* WeaponOutAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* WeaponOutAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* ReloadAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* ReloadAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* SecondWeaponReloadAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* SecondWeaponReloadAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* ThirdWeaponReloadAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* ThirdWeaponReloadAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* ThrowGrenadeAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* ThrowGrenadeAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, Category = Character)
-		UAnimMontage* KnifeAttackAnimMontage;
+	//UPROPERTY(EditDefaultsOnly, Category = Character)
+	//	UAnimMontage* KnifeAttackAnimMontage;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<UUserWidget> GameUserWidgetClass; // 正常模式下widget对象指针
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+	//	TSubclassOf<UUserWidget> GameUserWidgetClass; // 正常模式下widget对象指针
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<UUserWidget> SniperUserWidgetClass; // 狙击模式widget对象指针
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+	//	TSubclassOf<UUserWidget> SniperUserWidgetClass; // 狙击模式widget对象指针
 
 	/*UPROPERTY(BlueprintReadOnly, Category = Character)
 		EWeaponMode WeaponMode = EWeaponMode::MainWeapon;*/
@@ -326,18 +326,18 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 		int GrenadeCount;
 
-	UPROPERTY(BlueprintReadOnly)
+	/*UPROPERTY(BlueprintReadOnly)
 		UUserWidget* CurrentGameUserWidget;
 
 	UPROPERTY(BlueprintReadOnly)
-		UUserWidget* CurrentSniperUserWidget;
+		UUserWidget* CurrentSniperUserWidget;*/
 
 
 private:
 
 	// 手上物品
-	UPROPERTY(VisibleDefaultsOnly, Category = "DemoSummer")
-		class UChildActorComponent* HandObject;
+	/*UPROPERTY(VisibleDefaultsOnly, Category = "DemoSummer")
+		class UChildActorComponent* HandObject;*/
 
 	float BaseLookUpRate;
 
