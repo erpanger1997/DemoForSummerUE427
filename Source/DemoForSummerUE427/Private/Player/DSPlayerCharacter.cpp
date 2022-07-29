@@ -133,7 +133,7 @@ void ADSPlayerCharacter::BeginPlay()
 	CurrentGameUserWidget = CreateWidget(GetWorld(), GameUserWidgetClass);
 	CurrentGameUserWidget->AddToViewport();*/
 
-	// HealthComponent->OnHealthChanged.AddDynamic(this, &AMultiShootGameCharacter::OnHealthChanged);
+	// HealthComponent->OnHealthChanged.AddDynamic(this, &ADSPlayerCharacter::OnHealthChanged);
 
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -1083,11 +1083,11 @@ bool ADSPlayerCharacter::GetAimed() const
 {
 	return bAimed;
 }
-//
-//EWeaponMode AMultiShootGameCharacter::GetWeaponMode() const
-//{
-//	return WeaponMode;
-//}
+
+EWeaponMode ADSPlayerCharacter::GetWeaponMode() const
+{
+	return WeaponMode;
+}
 
 void ADSPlayerCharacter::SetEnableMovement(bool Value)
 {
@@ -1095,7 +1095,7 @@ void ADSPlayerCharacter::SetEnableMovement(bool Value)
 }
 
 //
-//UHealthComponent* AMultiShootGameCharacter::GetHealthComponent() const
+//UHealthComponent* ADSPlayerCharacter::GetHealthComponent() const
 //{
 //	return HealthComponent;
 //}

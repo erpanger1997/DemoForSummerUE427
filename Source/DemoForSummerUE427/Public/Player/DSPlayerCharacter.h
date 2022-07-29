@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include <Weapon/DSWeapon.h>
+#include <Enum/EWeaponMode.h>
 // #include "../Plugins/Cameras/GameplayCameras/Source/GameplayCameras/Public/MatineeCameraShake.h"
 #include "DSPlayerCharacter.generated.h"
 //#include "Runtime/Engine/Classes/Components/ChildActorComponent.h"
@@ -34,21 +36,21 @@ public:
 
 	UCameraComponent* GetCameraComponent() const;
 
-	/*UPROPERTY(BlueprintReadOnly)
-		AMultiShootGameWeapon* CurrentMainWeapon;
+	UPROPERTY(BlueprintReadOnly)
+		ADSWeapon* CurrentMainWeapon;
 
 	UPROPERTY(BlueprintReadOnly)
-		AMultiShootGameWeapon* CurrentSecondWeapon;
+		ADSWeapon* CurrentSecondWeapon;
 
 	UPROPERTY(BlueprintReadOnly)
-		AMultiShootGameWeapon* CurrentThirdWeapon;
+		ADSWeapon* CurrentThirdWeapon;
 
 	UPROPERTY(BlueprintReadOnly)
-		AMultiShootGameFPSCamera* CurrentFPSCamera;*/
+		ADSWeapon* CurrentFPSCamera;
 
 	bool GetAimed() const;
 
-	//EWeaponMode GetWeaponMode() const;
+	EWeaponMode GetWeaponMode() const;
 
 	void SetEnableMovement(bool Value);
 
@@ -287,8 +289,8 @@ protected:
 	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 	//	TSubclassOf<UUserWidget> SniperUserWidgetClass; // 狙击模式widget对象指针
 
-	/*UPROPERTY(BlueprintReadOnly, Category = Character)
-		EWeaponMode WeaponMode = EWeaponMode::MainWeapon;*/
+	UPROPERTY(BlueprintReadOnly, Category = Character)
+		EWeaponMode WeaponMode = EWeaponMode::MainWeapon;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		float KnifeDamage = 100.f;
