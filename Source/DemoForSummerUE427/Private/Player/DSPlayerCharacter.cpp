@@ -75,16 +75,19 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 	BaseLookUpRate = 45.f;
 	BaseTurnRate = 45.f;
 
-	/*MainWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MainWeaponSceneComponent"));
+	MainWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MainWeaponSceneComponent"));
 	MainWeaponSceneComponent->SetupAttachment(GetMesh(), MainWeaponSocketName);
+	MainWeaponClass = ADSWeapon::StaticClass();
+	//DSHelper::Debug(MainWeaponSceneComponent->GetAttachSocketName().ToString(), 3);
+		//GetAttachParent()->GetFName().ToString(), 3);
 
-	SecondWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SecondWeaponSceneComponent"));
+	/*SecondWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SecondWeaponSceneComponent"));
 	SecondWeaponSceneComponent->SetupAttachment(GetMesh(), BackSecondWeaponSocketName);
 
 	ThirdWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ThirdWeaponSceneComponent"));
-	ThirdWeaponSceneComponent->SetupAttachment(GetMesh(), BackThirdWeaponSocketName);
+	ThirdWeaponSceneComponent->SetupAttachment(GetMesh(), BackThirdWeaponSocketName);*/
 
-	GrenadeSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("GrenadeSceneComponent"));
+	/*GrenadeSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("GrenadeSceneComponent"));
 	GrenadeSceneComponent->SetupAttachment(GetMesh(), GrenadeSocketName);
 
 	KnifeSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("KnifeSkeletalMeshComponent"));
@@ -109,7 +112,7 @@ void ADSPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	DSHelper::Debug(FString::Printf(TEXT("BeginPlay")), 5);
+	//DSHelper::Debug(FString::Printf(TEXT("BeginPlay")), 5);
 	// 实例化控制器指针
 	//SPController = Cast<ADSPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
@@ -140,27 +143,32 @@ void ADSPlayerCharacter::BeginPlay()
 
 	// 设置component
 
-	/*CurrentMainWeapon = GetWorld()->SpawnActor<AMultiShootGameWeapon>(MainWeaponClass, FVector::ZeroVector,
+
+	CurrentMainWeapon = GetWorld()->SpawnActor<ADSWeapon>(MainWeaponClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		SpawnParameters);
-	CurrentSecondWeapon = GetWorld()->SpawnActor<AMultiShootGameWeapon>(SecondWeaponClass, FVector::ZeroVector,
+	/*CurrentSecondWeapon = GetWorld()->SpawnActor<ADSWeapon>(SecondWeaponClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		SpawnParameters);
-	CurrentThirdWeapon = GetWorld()->SpawnActor<AMultiShootGameWeapon>(ThirdWeaponClass, FVector::ZeroVector,
+	CurrentThirdWeapon = GetWorld()->SpawnActor<ADSWeapon>(ThirdWeaponClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
-		SpawnParameters);
-	CurrentFPSCamera = GetWorld()->SpawnActor<AMultiShootGameFPSCamera>(FPSCameraClass, FVector::ZeroVector,
+		SpawnParameters);*/
+	/*CurrentFPSCamera = GetWorld()->SpawnActor<ADSWeapon>(FPSCameraClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		SpawnParameters);*/
 
-	/*if (CurrentMainWeapon)
+	if (CurrentMainWeapon)
 	{
 		CurrentMainWeapon->SetOwner(this);
 		CurrentMainWeapon->AttachToComponent(MainWeaponSceneComponent,
 			FAttachmentTransformRules::SnapToTargetIncludingScale);
+		DSHelper::Debug(FString(TEXT("BeginPlay currentmainweapon exist")), 3);
+	}
+	else {
+		DSHelper::Debug(FString(TEXT("BeginPlay no currentmainweapon")), 3);
 	}
 
-	if (CurrentSecondWeapon)
+	/*if (CurrentSecondWeapon)
 	{
 		CurrentSecondWeapon->SetOwner(this);
 		CurrentSecondWeapon->AttachToComponent(SecondWeaponSceneComponent,
@@ -172,9 +180,9 @@ void ADSPlayerCharacter::BeginPlay()
 		CurrentThirdWeapon->SetOwner(this);
 		CurrentThirdWeapon->AttachToComponent(ThirdWeaponSceneComponent,
 			FAttachmentTransformRules::SnapToTargetIncludingScale);
-	}
+	}*/
 
-	if (CurrentFPSCamera)
+	/*if (CurrentFPSCamera)
 	{
 		CurrentFPSCamera->SetOwner(this);
 		CurrentFPSCamera->AttachToComponent(FPSCameraSceneComponent,
@@ -207,7 +215,7 @@ void ADSPlayerCharacter::StartFire()
 
 	if (!bAimed)
 	{
-		/*switch (WeaponMode)
+		switch (WeaponMode)
 		{
 		case EWeaponMode::MainWeapon:
 			if (CurrentMainWeapon)
@@ -215,20 +223,20 @@ void ADSPlayerCharacter::StartFire()
 				CurrentMainWeapon->StartFire();
 			}
 			break;
-		case EWeaponMode::SecondWeapon:
-			if (CurrentSecondWeapon)
-			{
-				CurrentSecondWeapon->Fire();
-				BeginSecondWeaponReload();
-			}
-			break;
-		case EWeaponMode::ThirdWeapon:
-			if (CurrentThirdWeapon)
-			{
-				CurrentThirdWeapon->FireOfDelay();
-			}
-			break;
-		}*/
+			/*case EWeaponMode::SecondWeapon:
+				if (CurrentSecondWeapon)
+				{
+					CurrentSecondWeapon->Fire();
+					BeginSecondWeaponReload();
+				}
+				break;
+			case EWeaponMode::ThirdWeapon:
+				if (CurrentThirdWeapon)
+				{
+					CurrentThirdWeapon->FireOfDelay();
+				}
+				break;*/
+		}
 	}
 	else
 	{
@@ -257,18 +265,18 @@ void ADSPlayerCharacter::StopFire()
 
 	ToggleUseControlRotation(false);
 
-	/*if (WeaponMode == EWeaponMode::MainWeapon)
+	if (WeaponMode == EWeaponMode::MainWeapon)
 	{
 		if (CurrentMainWeapon)
 		{
 			CurrentMainWeapon->StopFire();
 		}
 
-		if (CurrentFPSCamera)
+		/*if (CurrentFPSCamera)
 		{
 			CurrentFPSCamera->StopFire();
-		}
-	}*/
+		}*/
+	}
 }
 
 void ADSPlayerCharacter::MoveForward(float Value)
@@ -1035,6 +1043,13 @@ void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+
+	// Bind fire event
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ADSPlayerCharacter::StartFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &ADSPlayerCharacter::StopFire);
+
 	PlayerInputComponent->BindAction("FastRun", IE_Pressed, this, &ADSPlayerCharacter::BeginFastRun);
 	PlayerInputComponent->BindAction("FastRun", IE_Released, this, &ADSPlayerCharacter::EndFastRun);
 

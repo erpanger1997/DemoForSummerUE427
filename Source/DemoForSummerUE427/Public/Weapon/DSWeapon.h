@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include <Enum/EWeaponMode.h>
+#include <Struct/WeaponInfo.h>
+#include "DSBulletShell.h"
+#include "DSMagazineClip.h"
 #include "DSWeapon.generated.h"
 
 class ADSPlayerCharacter;
@@ -18,18 +21,47 @@ public:
 	// Sets default values for this pawn's properties
 	ADSWeapon();
 
+	void Fire();
+
+	void StartFire();
+
+	void StopFire();
+
+	void FireOfDelay();
+
+	void EnablePhysicsSimulate();
+
+	void ReloadShowMagazineClip(bool Enabled);
+
+	void BulletReload();
+
+	void FillUpBullet();
+
+	USkeletalMeshComponent* GetWeaponMeshComponent() const;
+
+	UAudioComponent* GetAudioComponent() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual bool BulletCheck(ADSPlayerCharacter* MyOwner);
+	bool BulletCheck(ADSPlayerCharacter* MyOwner);
 
-	virtual void BulletFire(ADSPlayerCharacter* MyOwner);
+	void BulletFire(ADSPlayerCharacter* MyOwner);
 
 	void ShakeCamera();
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+
+	void InitSPCharacter();
+
+private:
+
+	void SetWeaponInfo();
+
+public:
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
+		FWeaponInfo WeaponInfo;
 
 protected:
 
@@ -57,11 +89,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 		UParticleSystem* MuzzleEffect;
 
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
-		TSubclassOf<AMultiShootGameBulletShell> BulletShellClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
+		TSubclassOf<ADSBulletShell> BulletShellClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
-		TSubclassOf<AMultiShootGameMagazineClip> MagazineClipClass;*/
+		TSubclassOf<ADSMagazineClip> MagazineClipClass;
 
 	FTimerHandle TimerHandle;
 
@@ -71,4 +103,6 @@ protected:
 
 	bool Loop = false;
 
+
+	class ADSPlayerCharacter* SPCharacter;
 };

@@ -32,21 +32,7 @@ public:
 
 	void BeginReload();
 
-	//USceneComponent* GetFPSCameraSceneComponent() const;
-
-	UCameraComponent* GetCameraComponent() const;
-
-	UPROPERTY(BlueprintReadOnly)
-		ADSWeapon* CurrentMainWeapon;
-
-	UPROPERTY(BlueprintReadOnly)
-		ADSWeapon* CurrentSecondWeapon;
-
-	UPROPERTY(BlueprintReadOnly)
-		ADSWeapon* CurrentThirdWeapon;
-
-	UPROPERTY(BlueprintReadOnly)
-		ADSWeapon* CurrentFPSCamera;
+	
 
 	bool GetAimed() const;
 
@@ -172,6 +158,22 @@ public:
 
 	class ADSPlayerController* SPController;
 
+	//USceneComponent* GetFPSCameraSceneComponent() const;
+
+	UCameraComponent* GetCameraComponent() const;
+
+	UPROPERTY(BlueprintReadOnly)
+		ADSWeapon* CurrentMainWeapon;
+
+	UPROPERTY(BlueprintReadOnly)
+		ADSWeapon* CurrentSecondWeapon;
+
+	UPROPERTY(BlueprintReadOnly)
+		ADSWeapon* CurrentThirdWeapon;
+
+	UPROPERTY(BlueprintReadOnly)
+		ADSWeapon* CurrentFPSCamera;
+
 protected:
 
 
@@ -181,17 +183,17 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		UCameraComponent* CameraComponent;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		USceneComponent* FPSCameraSceneComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		USceneComponent* MainWeaponSceneComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		USceneComponent* SecondWeaponSceneComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		USceneComponent* ThirdWeaponSceneComponent;
+		USceneComponent* ThirdWeaponSceneComponent;*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		USceneComponent* GrenadeSceneComponent;
@@ -200,27 +202,27 @@ protected:
 		USkeletalMeshComponent* KnifeSkeletalMeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		UAudioComponent* DeathAudioComponent;*/
+		UAudioComponent* DeathAudioComponent;
 
 	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		UHealthComponent* HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		UHitEffectComponent* HitEffectComponent;
+		UHitEffectComponent* HitEffectComponent;*/
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<AMultiShootGameWeapon> MainWeaponClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<AMultiShootGameWeapon> SecondWeaponClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<AMultiShootGameWeapon> ThirdWeaponClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<AMultiShootGameGrenade> GrenadeClass;*/
+		TSubclassOf<ADSWeapon> MainWeaponClass;
 
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+		TSubclassOf<ADSWeapon> SecondWeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+		TSubclassOf<ADSWeapon> ThirdWeaponClass;*/
+
+	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+		TSubclassOf<AMultiShootGameGrenade> GrenadeClass;*/
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<UDamageType> DamageTypeClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
@@ -248,7 +250,7 @@ protected:
 		FName KnifeSocketName = "KnifeSocket";
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
-		FName HitSocketName = "HitSocket";*/
+		FName HitSocketName = "HitSocket";
 
 	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<AMultiShootGameFPSCamera> FPSCameraClass;*/

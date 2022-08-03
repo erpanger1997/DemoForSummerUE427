@@ -94,7 +94,7 @@ void UDSPlayerAnim::UpdateParameter()
 	SpineRotator = FRotator(0.f, SpineDir, 90.f);
 	// UpdateJumpFallData();
 	UpdateGroundDistance();
-	DSHelper::Debug(FString::Printf(TEXT("-- speed = %f"), Speed), 0.1);
+	//DSHelper::Debug(FString::Printf(TEXT("-- speed = %f"), Speed), 0.1);
 	// GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("-- speed = %f"), Speed));
 }
 
@@ -175,7 +175,7 @@ void UDSPlayerAnim::RunRayCast()
 	bool IsDetect = false;
 	FHitResult Hit = RayGetHitResult(StartPos, EndPos);
 	GroundDistance = Hit.Distance;
-	DSHelper::Debug(FString::Printf(TEXT("-- GroundDistance = %f"), GroundDistance), 0.1);
+	//DSHelper::Debug(FString::Printf(TEXT("-- GroundDistance = %f"), GroundDistance), 0.1);
 }
 
 void UDSPlayerAnim::UpdateLocationData(float DeltaSeconds)
