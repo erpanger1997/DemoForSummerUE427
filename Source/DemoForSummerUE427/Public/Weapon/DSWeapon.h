@@ -45,9 +45,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	bool BulletCheck(ADSPlayerCharacter* MyOwner);
+	virtual bool BulletCheck(ADSPlayerCharacter* MyOwner);
 
-	void BulletFire(ADSPlayerCharacter* MyOwner);
+	virtual void BulletFire(ADSPlayerCharacter* MyOwner);
 
 	void ShakeCamera();
 

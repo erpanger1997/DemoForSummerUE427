@@ -5,6 +5,7 @@
 #include "Components/AudioComponent.h"
 #include <Common/DSHelper.h>
 #include <Player/DSPlayerCharacter.h>
+#include <Kismet/KismetMathLibrary.h>
 
 // Sets default values
 ADSWeapon::ADSWeapon()
@@ -130,8 +131,8 @@ void ADSWeapon::Fire()
 
 		if (SPCharacter->GetAimed())
 		{
-			/*EyeLocation = SPCharacter->CurrentFPSCamera->GetCameraComponent()->GetComponentLocation();
-			EyeRotation = SPCharacter->CurrentFPSCamera->GetCameraComponent()->GetComponentRotation();*/
+			EyeLocation = SPCharacter->CurrentFPSCamera->GetCameraComponent()->GetComponentLocation();
+			EyeRotation = SPCharacter->CurrentFPSCamera->GetCameraComponent()->GetComponentRotation();
 		}
 		else
 		{
@@ -146,14 +147,14 @@ void ADSWeapon::Fire()
 
 		const FVector TraceEnd = EyeLocation + (ShotDirection * 3000.f);
 
-		/*if (Cast<AMultiShootGameFPSCamera>(this))
+		if (Cast<ADSFirstWeapon>(this))
 		{
 			const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(EyeLocation, TraceEnd);
 
 			const FRotator TargetRotation = FRotator(0, LookAtRotation.Yaw - 90.f, LookAtRotation.Pitch * -1.f);
 
-			Cast<AMultiShootGameCharacter>(GetOwner())->GetFPSCameraSceneComponent()->SetWorldRotation(TargetRotation);
-		}*/
+			Cast<ADSPlayerCharacter>(GetOwner())->GetFPSCameraSceneComponent()->SetWorldRotation(TargetRotation);
+		}
 
 		/*if (MuzzleEffect)
 		{

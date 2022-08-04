@@ -8,6 +8,8 @@
 #include "Camera/CameraComponent.h"
 #include <Weapon/DSWeapon.h>
 #include <Enum/EWeaponMode.h>
+#include <Weapon/DSFirstWeapon.h>
+#include <MatineeCameraShake.h>
 // #include "../Plugins/Cameras/GameplayCameras/Source/GameplayCameras/Public/MatineeCameraShake.h"
 #include "DSPlayerCharacter.generated.h"
 //#include "Runtime/Engine/Classes/Components/ChildActorComponent.h"
@@ -158,7 +160,7 @@ public:
 
 	class ADSPlayerController* SPController;
 
-	//USceneComponent* GetFPSCameraSceneComponent() const;
+	USceneComponent* GetFPSCameraSceneComponent() const;
 
 	UCameraComponent* GetCameraComponent() const;
 
@@ -172,7 +174,7 @@ public:
 		ADSWeapon* CurrentThirdWeapon;
 
 	UPROPERTY(BlueprintReadOnly)
-		ADSWeapon* CurrentFPSCamera;
+		ADSFirstWeapon* CurrentFPSCamera;
 
 protected:
 
@@ -252,10 +254,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Character)
 		FName HitSocketName = "HitSocket";
 
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
-		TSubclassOf<AMultiShootGameFPSCamera> FPSCameraClass;*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
+		TSubclassOf<ADSFirstWeapon> FPSCameraClass;
 
-	/*UPROPERTY(EditDefaultsOnly, Category = Character)
+	UPROPERTY(EditDefaultsOnly, Category = Character)
 		TSubclassOf<UMatineeCameraShake> MovementCameraShakeClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
@@ -265,13 +267,13 @@ protected:
 		TSubclassOf<UMatineeCameraShake> KnifeCameraShakeClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = Character)
-		TSubclassOf<UMatineeCameraShake> HitCameraShakeClass;*/
+		TSubclassOf<UMatineeCameraShake> HitCameraShakeClass;
 
-	//UPROPERTY(EditDefaultsOnly, Category = Character)
-	//	UAnimMontage* WeaponOutAnimMontage;
+	UPROPERTY(EditDefaultsOnly, Category = Character)
+		UAnimMontage* WeaponOutAnimMontage;
 
-	//UPROPERTY(EditDefaultsOnly, Category = Character)
-	//	UAnimMontage* ReloadAnimMontage;
+	UPROPERTY(EditDefaultsOnly, Category = Character)
+		UAnimMontage* ReloadAnimMontage;
 
 	//UPROPERTY(EditDefaultsOnly, Category = Character)
 	//	UAnimMontage* SecondWeaponReloadAnimMontage;

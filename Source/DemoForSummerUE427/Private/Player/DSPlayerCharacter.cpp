@@ -78,6 +78,15 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 	MainWeaponSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("MainWeaponSceneComponent"));
 	MainWeaponSceneComponent->SetupAttachment(GetMesh(), MainWeaponSocketName);
 	MainWeaponClass = ADSWeapon::StaticClass();
+	FPSCameraClass = ADSFirstWeapon::StaticClass();
+
+	FPSCameraSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FPSCameraSceneComponent"));
+	FPSCameraSceneComponent->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ReloadAnimMon(
+		TEXT("AnimMontage'/Game/Animation/Rifle_8-Way_Locomotion_Pack/Montage_Reloading.Montage_Reloading'"));
+
+	ReloadAnimMontage = ReloadAnimMon.Object;
 	//DSHelper::Debug(MainWeaponSceneComponent->GetAttachSocketName().ToString(), 3);
 		//GetAttachParent()->GetFName().ToString(), 3);
 
@@ -92,12 +101,9 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 
 	KnifeSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("KnifeSkeletalMeshComponent"));
 	KnifeSkeletalMeshComponent->SetupAttachment(GetMesh(), KnifeSocketName);
-	KnifeSkeletalMeshComponent->SetVisibility(false);
+	KnifeSkeletalMeshComponent->SetVisibility(false);*/
 
-	FPSCameraSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("FPSCameraSceneComponent"));
-	FPSCameraSceneComponent->SetupAttachment(RootComponent);
-
-	DeathAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("DeathAudioComponent"));
+	/*DeathAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("DeathAudioComponent"));
 	DeathAudioComponent->SetupAttachment(RootComponent);
 	DeathAudioComponent->SetAutoActivate(false);*/
 
@@ -153,9 +159,13 @@ void ADSPlayerCharacter::BeginPlay()
 	CurrentThirdWeapon = GetWorld()->SpawnActor<ADSWeapon>(ThirdWeaponClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
 		SpawnParameters);*/
-	/*CurrentFPSCamera = GetWorld()->SpawnActor<ADSWeapon>(FPSCameraClass, FVector::ZeroVector,
+	CurrentFPSCamera = GetWorld()->SpawnActor<ADSFirstWeapon>(FPSCameraClass, FVector::ZeroVector,
 		FRotator::ZeroRotator,
-		SpawnParameters);*/
+		SpawnParameters);
+	if (!CurrentFPSCamera) {
+
+		DSHelper::Debug(FString::Printf(TEXT("BeginPlay get CurrentFPSCamera fali")), 5);
+	}
 
 	if (CurrentMainWeapon)
 	{
@@ -182,7 +192,7 @@ void ADSPlayerCharacter::BeginPlay()
 			FAttachmentTransformRules::SnapToTargetIncludingScale);
 	}*/
 
-	/*if (CurrentFPSCamera)
+	if (CurrentFPSCamera)
 	{
 		CurrentFPSCamera->SetOwner(this);
 		CurrentFPSCamera->AttachToComponent(FPSCameraSceneComponent,
@@ -193,7 +203,7 @@ void ADSPlayerCharacter::BeginPlay()
 		CurrentFPSCamera->SetWeaponInfo(CurrentMainWeapon);
 	}
 
-	if (CurrentGrenade)
+	/*if (CurrentGrenade)
 	{
 		CurrentGrenade->SetOwner(this);
 		CurrentGrenade->AttachToComponent(GrenadeSceneComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
@@ -240,22 +250,23 @@ void ADSPlayerCharacter::StartFire()
 	}
 	else
 	{
-		/*if (CurrentFPSCamera)
+		if (CurrentFPSCamera)
 		{
+
 			switch (WeaponMode)
 			{
 			case EWeaponMode::MainWeapon:
 				CurrentFPSCamera->StartFire();
 				break;
-			case EWeaponMode::SecondWeapon:
+			/*case EWeaponMode::SecondWeapon:
 				CurrentFPSCamera->Fire();
 				BeginSecondWeaponReload();
 				break;
 			case EWeaponMode::ThirdWeapon:
 				CurrentFPSCamera->FireOfDelay();
-				break;
+				break;*/
 			}
-		}*/
+		}
 	}
 }
 
@@ -272,10 +283,10 @@ void ADSPlayerCharacter::StopFire()
 			CurrentMainWeapon->StopFire();
 		}
 
-		/*if (CurrentFPSCamera)
+		if (CurrentFPSCamera)
 		{
 			CurrentFPSCamera->StopFire();
-		}*/
+		}
 	}
 }
 
@@ -389,12 +400,12 @@ void ADSPlayerCharacter::BeginAim()
 
 	SpringArmComponent->SocketOffset = FVector::ZeroVector;
 
-	/*APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	PlayerController->SetViewTargetWithBlend(CurrentFPSCamera, 0.1f);
 
 	CurrentFPSCamera->SetActorHiddenInGame(false);
 	CurrentMainWeapon->SetActorHiddenInGame(true);
-	CurrentSecondWeapon->SetActorHiddenInGame(true);
+	/*CurrentSecondWeapon->SetActorHiddenInGame(true);
 	CurrentThirdWeapon->SetActorHiddenInGame(true);*/
 	GetMesh()->SetHiddenInGame(true);
 
@@ -406,14 +417,14 @@ void ADSPlayerCharacter::BeginAim()
 	/*if (WeaponMode == EWeaponMode::SecondWeapon && CurrentSecondWeapon->WeaponInfo.AimTexture)
 	{
 		CurrentSniperUserWidget->SetVisibility(ESlateVisibility::Visible);
-	}
+	}*/
 
 	if (WeaponMode == EWeaponMode::MainWeapon && bFired)
 	{
 		CurrentFPSCamera->StartFire();
 	}
 
-	CurrentMainWeapon->StopFire();*/
+	CurrentMainWeapon->StopFire();
 }
 
 void ADSPlayerCharacter::EndAim()
@@ -428,8 +439,8 @@ void ADSPlayerCharacter::EndAim()
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	PlayerController->SetViewTargetWithBlend(this, 0.1f);
 
-	//CurrentFPSCamera->SetActorHiddenInGame(true);
-	//CurrentMainWeapon->SetActorHiddenInGame(false);
+	CurrentFPSCamera->SetActorHiddenInGame(true);
+	CurrentMainWeapon->SetActorHiddenInGame(false);
 	//CurrentSecondWeapon->SetActorHiddenInGame(false);
 	//CurrentThirdWeapon->SetActorHiddenInGame(false);
 	GetMesh()->SetHiddenInGame(false);
@@ -442,18 +453,20 @@ void ADSPlayerCharacter::EndAim()
 	/*if (CurrentSecondWeapon->WeaponInfo.AimTexture)
 	{
 		CurrentSniperUserWidget->SetVisibility(ESlateVisibility::Hidden);
-	}
+	}*/
 
 	if (WeaponMode == EWeaponMode::MainWeapon && bFired)
 	{
 		CurrentMainWeapon->StartFire();
 	}
 
-	CurrentFPSCamera->StopFire();*/
+	CurrentFPSCamera->StopFire();
 }
 
 void ADSPlayerCharacter::BeginReload()
 {
+
+	DSHelper::Debug(FString::Printf(TEXT("BeginReload")), 5);
 	if (!CheckStatus(false, true))
 	{
 		return;
@@ -465,14 +478,14 @@ void ADSPlayerCharacter::BeginReload()
 
 	EndAction();
 
-	/*switch (WeaponMode)
+	switch (WeaponMode)
 	{
 	case EWeaponMode::MainWeapon:
 		if (CurrentMainWeapon->WeaponInfo.MaxBulletNumber > 0)
 		{
-			PlayAnimMontage(ReloadAnimMontage);
+			DSHelper::Debug(FString::Printf(TEXT("BeginReload PlayAnimMontage end = %f"), PlayAnimMontage(ReloadAnimMontage)), 5);
 		}
-	case EWeaponMode::SecondWeapon:
+	/*case EWeaponMode::SecondWeapon:
 		if (CurrentSecondWeapon->WeaponInfo.MaxBulletNumber > 0)
 		{
 			PlayAnimMontage(ReloadAnimMontage);
@@ -483,8 +496,8 @@ void ADSPlayerCharacter::BeginReload()
 		{
 			PlayAnimMontage(ThirdWeaponReloadAnimMontage);
 		}
-		break;
-	}*/
+		break;*/
+	}
 }
 
 
@@ -507,11 +520,13 @@ void ADSPlayerCharacter::BeginSecondWeaponReload()
 
 void ADSPlayerCharacter::EndReload()
 {
+
+	DSHelper::Debug(FString::Printf(TEXT("EndReload")), 5);
 	bReloading = false;
 
 	if (!bSecondWeaponReloading)
 	{
-		/*switch (WeaponMode)
+		switch (WeaponMode)
 		{
 		case EWeaponMode::MainWeapon:
 			if (CurrentMainWeapon->WeaponInfo.BulletNumber < CurrentMainWeapon->WeaponInfo.FillUpBulletNumber)
@@ -519,7 +534,7 @@ void ADSPlayerCharacter::EndReload()
 				CurrentMainWeapon->BulletReload();
 			}
 			break;
-		case EWeaponMode::SecondWeapon:
+		/*case EWeaponMode::SecondWeapon:
 			if (CurrentSecondWeapon->WeaponInfo.BulletNumber < CurrentSecondWeapon->WeaponInfo.FillUpBulletNumber)
 			{
 				CurrentSecondWeapon->BulletReload();
@@ -530,8 +545,8 @@ void ADSPlayerCharacter::EndReload()
 			{
 				CurrentThirdWeapon->BulletReload();
 			}
-			break;
-		}*/
+			break;*/
+		}
 	}
 
 	bSecondWeaponReloading = false;
@@ -541,7 +556,7 @@ void ADSPlayerCharacter::EndReload()
 
 void ADSPlayerCharacter::ReloadShowClip(bool Enabled)
 {
-	/*AMultiShootGameWeapon* TempWeapon = nullptr;
+	ADSWeapon* TempWeapon = nullptr;
 	switch (WeaponMode)
 	{
 	case EWeaponMode::MainWeapon:
@@ -555,7 +570,7 @@ void ADSPlayerCharacter::ReloadShowClip(bool Enabled)
 		break;
 	}
 
-	TempWeapon->ReloadShowMagazineClip(Enabled);*/
+	TempWeapon->ReloadShowMagazineClip(Enabled);
 }
 
 void ADSPlayerCharacter::ToggleMainWeapon()
@@ -565,24 +580,24 @@ void ADSPlayerCharacter::ToggleMainWeapon()
 		return;
 	}
 
-	/*if (WeaponMode == EWeaponMode::MainWeapon)
+	if (WeaponMode == EWeaponMode::MainWeapon)
 	{
 		return;
-	}*/
+	}
 
 	bToggleWeapon = true;
 
 	EndAction();
 
-	//WeaponMode = EWeaponMode::MainWeapon;
+	WeaponMode = EWeaponMode::MainWeapon;
 
-	//CurrentFPSCamera->SetWeaponInfo(CurrentMainWeapon);
+	CurrentFPSCamera->SetWeaponInfo(CurrentMainWeapon);
 
 	bUseControllerRotationYaw = false;
 
 	HandleWalkSpeed();
 
-	//PlayAnimMontage(WeaponOutAnimMontage);
+	PlayAnimMontage(WeaponOutAnimMontage);
 }
 
 void ADSPlayerCharacter::ToggleSecondWeapon()
@@ -738,10 +753,10 @@ void ADSPlayerCharacter::Hit()
 
 void ADSPlayerCharacter::FillUpWeaponBullet()
 {
-	/*CurrentMainWeapon->FillUpBullet();
-	CurrentSecondWeapon->FillUpBullet();
-	CurrentThirdWeapon->FillUpBullet();
-	CurrentFPSCamera->FillUpBullet();*/
+	CurrentMainWeapon->FillUpBullet();
+	/*CurrentSecondWeapon->FillUpBullet();
+	CurrentThirdWeapon->FillUpBullet();*/
+	CurrentFPSCamera->FillUpBullet();
 	GrenadeCount = MaxGrenadeCount;
 }
 
@@ -911,10 +926,10 @@ bool ADSPlayerCharacter::CheckStatus(bool CheckAimed, bool CheckThrowGrenade)
 		return false;
 	}*/
 
-	/*if (CheckAimed && bAimed)
+	if (CheckAimed && bAimed)
 	{
 		return false;
-	}*/
+	}
 
 	/*if (CheckThrowGrenade && bBeginThrowGrenade)
 	{
@@ -964,10 +979,10 @@ void ADSPlayerCharacter::AttachWeapon(bool MainWeapon, bool SecondWeapon, bool T
 
 void ADSPlayerCharacter::ToggleUseControlRotation(bool Enabled)
 {
-	/*if (WeaponMode == EWeaponMode::MainWeapon)
-	{*/
+	if (WeaponMode == EWeaponMode::MainWeapon)
+	{
 	bUseControlRotation = Enabled;
-	/*}*/
+	}
 }
 
 void ADSPlayerCharacter::Death()
@@ -987,14 +1002,13 @@ void ADSPlayerCharacter::Death()
 	GetMesh()->SetCollisionProfileName(FName("Ragdoll"));
 	GetMesh()->GetAnimInstance()->StopAllMontages(0);
 
-	/*CurrentMainWeapon->EnablePhysicsSimulate();
-	CurrentSecondWeapon->EnablePhysicsSimulate();
-	CurrentThirdWeapon->EnablePhysicsSimulate();*/
+	CurrentMainWeapon->EnablePhysicsSimulate();
+	// CurrentSecondWeapon->EnablePhysicsSimulate();
+	// CurrentThirdWeapon->EnablePhysicsSimulate();
 
 	//DeathAudioComponent->Play();
 }
-// Called when the game starts or when spawned
-// Called every frame
+
 void ADSPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -1002,21 +1016,21 @@ void ADSPlayerCharacter::Tick(float DeltaTime)
 
 	if (bAimed)
 	{
-	//	const FVector StartLocation = FPSCameraSceneComponent->GetComponentLocation();
+		const FVector StartLocation = FPSCameraSceneComponent->GetComponentLocation();
 
-		/*const FVector CameraLocation = CameraComponent->GetComponentLocation();
+		const FVector CameraLocation = CameraComponent->GetComponentLocation();
 		const FRotator CameraRotation = CameraComponent->GetComponentRotation();
 		const FVector TargetLocation = CameraLocation + CameraRotation.Vector() * 3000.f;
 
 		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, TargetLocation);
 
-		const FRotator TargetRotation = FRotator(0, LookAtRotation.Yaw - 90.f, LookAtRotation.Pitch * -1.f);*/
+		const FRotator TargetRotation = FRotator(0, LookAtRotation.Yaw - 90.f, LookAtRotation.Pitch * -1.f);
 
-	//	FPSCameraSceneComponent->SetWorldRotation(TargetRotation);
+		FPSCameraSceneComponent->SetWorldRotation(TargetRotation);
 	}
 
-	/*if (WeaponMode == EWeaponMode::MainWeapon && (bUseControlRotation ||
-		(!bUseControlRotation && GetMovementComponent()->Velocity.Size() != 0)))*/
+	if (WeaponMode == EWeaponMode::MainWeapon && (bUseControlRotation ||
+		(!bUseControlRotation && GetMovementComponent()->Velocity.Size() != 0)))
 	if ((bUseControlRotation ||(!bUseControlRotation && GetMovementComponent()->Velocity.Size() != 0)))
 	{
 		const FRotator TargetRotation = FRotator(0, GetControlRotation().Yaw, 0);
@@ -1084,10 +1098,10 @@ void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 }
 
-//USceneComponent* ADSPlayerCharacter::GetFPSCameraSceneComponent() const
-//{
-//	return FPSCameraSceneComponent;
-//}
+USceneComponent* ADSPlayerCharacter::GetFPSCameraSceneComponent() const
+{
+	return FPSCameraSceneComponent;
+}
 
 UCameraComponent* ADSPlayerCharacter::GetCameraComponent() const
 {
