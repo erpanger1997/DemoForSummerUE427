@@ -25,6 +25,9 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <PhysicalMaterials/PhysicalMaterial.h>
 #include <Common/DSHelper.h>
+#include <Component/DSHitEffectComponent.h>
+#include <../DemoForSummerUE427.h>
+#include <Component/DSHealthComponent.h>
 //#include <Hand/DSHandObject.h>
 
 // Sets default values
@@ -107,10 +110,9 @@ ADSPlayerCharacter::ADSPlayerCharacter()
 	DeathAudioComponent->SetupAttachment(RootComponent);
 	DeathAudioComponent->SetAutoActivate(false);*/
 
-	//HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+	HealthComponent = CreateDefaultSubobject<UDSHealthComponent>(TEXT("HealthComponent"));
 
-	//HitEffectComponent = CreateDefaultSubobject<UHitEffectComponent>(TEXT("HitEfectComponent"));*/
-
+	HitEffectComponent = CreateDefaultSubobject<UDSHitEffectComponent>(TEXT("HitEfectComponent"));
 }
 
 
@@ -142,7 +144,7 @@ void ADSPlayerCharacter::BeginPlay()
 	CurrentGameUserWidget = CreateWidget(GetWorld(), GameUserWidgetClass);
 	CurrentGameUserWidget->AddToViewport();*/
 
-	// HealthComponent->OnHealthChanged.AddDynamic(this, &ADSPlayerCharacter::OnHealthChanged);
+	HealthComponent->OnHealthChanged.AddDynamic(this, &ADSPlayerCharacter::OnHealthChanged);
 
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -310,7 +312,7 @@ void ADSPlayerCharacter::MoveForward(float Value)
 	{
 		if (bAimed)
 		{
-			// UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(MovementCameraShakeClass);
+			UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(MovementCameraShakeClass);
 		}
 	}
 
@@ -338,7 +340,7 @@ void ADSPlayerCharacter::MoveRight(float Value)
 
 	if (bAimed && Value != 0)
 	{
-		// UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(MovementCameraShakeClass);
+		UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(MovementCameraShakeClass);
 	}
 }
 
@@ -483,7 +485,7 @@ void ADSPlayerCharacter::BeginReload()
 	case EWeaponMode::MainWeapon:
 		if (CurrentMainWeapon->WeaponInfo.MaxBulletNumber > 0)
 		{
-			DSHelper::Debug(FString::Printf(TEXT("BeginReload PlayAnimMontage end = %f"), PlayAnimMontage(ReloadAnimMontage)), 5);
+			PlayAnimMontage(ReloadAnimMontage);
 		}
 	/*case EWeaponMode::SecondWeapon:
 		if (CurrentSecondWeapon->WeaponInfo.MaxBulletNumber > 0)
@@ -733,22 +735,22 @@ void ADSPlayerCharacter::ToggleWeaponEnd()
 
 void ADSPlayerCharacter::Hit()
 {
-	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(KnifeCameraShakeClass);
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(KnifeCameraShakeClass);
 
-	//const FVector HitLocation = KnifeSkeletalMeshComponent->GetSocketLocation(HitSocketName);
-	//const FRotator HitRotation = KnifeSkeletalMeshComponent->GetComponentRotation();
-	//FHitResult HitResult;
-	//const TArray<AActor*> IgnoreActors;
-	//if (UKismetSystemLibrary::SphereTraceSingle(GetWorld(), HitLocation, HitLocation, 50.f, TraceType_Weapon, false,
-	//	IgnoreActors, EDrawDebugTrace::None, HitResult, true))
-	//{
-	//	const EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(HitResult.PhysMaterial.Get());
+	const FVector HitLocation = KnifeSkeletalMeshComponent->GetSocketLocation(HitSocketName);
+	const FRotator HitRotation = KnifeSkeletalMeshComponent->GetComponentRotation();
+	FHitResult HitResult;
+	const TArray<AActor*> IgnoreActors;
+	if (UKismetSystemLibrary::SphereTraceSingle(GetWorld(), HitLocation, HitLocation, 50.f, TraceType_Weapon, false,
+		IgnoreActors, EDrawDebugTrace::None, HitResult, true))
+	{
+		const EPhysicalSurface SurfaceType = UPhysicalMaterial::DetermineSurfaceType(HitResult.PhysMaterial.Get());
 
-	//	UGameplayStatics::ApplyDamage(HitResult.GetActor(), KnifeDamage, GetInstigatorController(), this,
-	//		DamageTypeClass);
+		UGameplayStatics::ApplyDamage(HitResult.GetActor(), KnifeDamage, GetInstigatorController(), this,
+			DamageTypeClass);
 
-	//	// HitEffectComponent->PlayHitEffect(SurfaceType, HitLocation, HitRotation);
-	//}
+		HitEffectComponent->PlayHitEffect(SurfaceType, HitLocation, HitRotation);
+	}
 }
 
 void ADSPlayerCharacter::FillUpWeaponBullet()
@@ -920,11 +922,11 @@ void ADSPlayerCharacter::TurnAtRate(float Value)
 bool ADSPlayerCharacter::CheckStatus(bool CheckAimed, bool CheckThrowGrenade)
 {
 
-	/*if (HealthComponent->bDied || bDetectingClimb || bReloading || bToggleWeapon || bSecondWeaponReloading ||
+	if (HealthComponent->bDied || bDetectingClimb || bReloading || bToggleWeapon || bSecondWeaponReloading ||
 		bThrowingGrenade || bKnifeAttack)
 	{
 		return false;
-	}*/
+	}
 
 	if (CheckAimed && bAimed)
 	{
@@ -936,6 +938,21 @@ bool ADSPlayerCharacter::CheckStatus(bool CheckAimed, bool CheckThrowGrenade)
 		return false;
 	}*/
 	return true;
+}
+
+void ADSPlayerCharacter::OnHealthChanged(UDSHealthComponent* OwningHealthComponent, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Health == 100.f)
+	{
+		return;
+	}
+
+	UGameplayStatics::GetPlayerController(GetWorld(), 0)->ClientStartCameraShake(HitCameraShakeClass);
+
+	if (Health <= 0.0f && !HealthComponent->bDied)
+	{
+		Death();
+	}
 }
 
 void ADSPlayerCharacter::EndAction()
@@ -987,7 +1004,7 @@ void ADSPlayerCharacter::ToggleUseControlRotation(bool Enabled)
 
 void ADSPlayerCharacter::Death()
 {
-	// HealthComponent->bDied = true;
+	HealthComponent->bDied = true;
 
 	EndAction();
 
@@ -1094,8 +1111,8 @@ void ADSPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 	PlayerInputComponent->BindAction("ThrowGrenade", IE_Pressed, this, &ADSPlayerCharacter::BeginThrowGrenade);
 	PlayerInputComponent->BindAction("ThrowGrenade", IE_Released, this, &ADSPlayerCharacter::ThrowGrenade);
 
-	//PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	//PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAction("Hittest", IE_Pressed, this, &ADSPlayerCharacter::Hit);
+
 }
 
 USceneComponent* ADSPlayerCharacter::GetFPSCameraSceneComponent() const
@@ -1123,8 +1140,8 @@ void ADSPlayerCharacter::SetEnableMovement(bool Value)
 	bEnableMovement = Value;
 }
 
-//
-//UHealthComponent* ADSPlayerCharacter::GetHealthComponent() const
-//{
-//	return HealthComponent;
-//}
+
+UDSHealthComponent* ADSPlayerCharacter::GetHealthComponent() const
+{
+	return HealthComponent;
+}

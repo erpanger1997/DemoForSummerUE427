@@ -5,6 +5,7 @@
 #include "Engine/DataTable.h"
 #include "CoreMinimal.h"
 #include <MatineeCameraShake.h>
+#include <Weapon/DSProjectileBase.h>
 #include "WeaponInfo.generated.h"
 
 /**
@@ -27,8 +28,8 @@ struct DEMOFORSUMMERUE427_API FWeaponInfo : public FTableRowBase
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponInfo)
 		UStaticMesh* MagazineClipMesh;	// µ¯¼Ðmesh
 
-	/*UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponInfo)
-		TSubclassOf<ADSProjectileBase> ProjectileClass;*/
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponInfo)
+		TSubclassOf<ADSProjectileBase> ProjectileClass; // ×Óµ¯Àà
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = WeaponInfo)
 		TSubclassOf<UMatineeCameraShake> FireCameraShake;	// ÆÁÄ»¶¶¶¯

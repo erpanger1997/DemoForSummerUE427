@@ -6,6 +6,9 @@
 #include <Common/DSHelper.h>
 #include <Player/DSPlayerCharacter.h>
 #include <Kismet/KismetMathLibrary.h>
+#include <Weapon/DSProjectileBase.h>
+#include <Weapon/DSProjectileBullet.h>
+#include <Weapon/DSTempBullet.h>
 
 // Sets default values
 ADSWeapon::ADSWeapon()
@@ -78,6 +81,9 @@ void ADSWeapon::SetWeaponInfo()
 	static ConstructorHelpers::FClassFinder<UMatineeCameraShake> FireCameraShake(
 		TEXT("Blueprint'/Game/BluePrints/CameraShake/BP_MainWeaponCameraShake.BP_MainWeaponCameraShake_C'"));
 
+	static ConstructorHelpers::FClassFinder<ADSProjectileBullet> BulletClass(
+		TEXT("Blueprint'/Game/BluePrints/Weapon/BP_Bullet.BP_Bullet_C'"));
+
 	FVector AimVector(0.f, -15.f, 14.f);
 
 	WeaponInfo.Name = FString(TEXT("Special Shader"));
@@ -113,6 +119,9 @@ void ADSWeapon::SetWeaponInfo()
 	WeaponInfo.MaxBulletNumber = 90;
 
 	WeaponInfo.FillUpMaxBulletNumber = 90;
+
+	WeaponInfo.ProjectileClass = ADSProjectileBullet::StaticClass();
+	ProjectileClass = ADSTempBullet::StaticClass();
 }
 
 void ADSWeapon::Fire()
@@ -160,17 +169,37 @@ void ADSWeapon::Fire()
 		{
 			UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, WeaponMeshComponent, MuzzleSocketName);
 		}*/
+		//if (ProjectileClass != nullptr)
+		//{
+		//	UWorld* const World = GetWorld();
+		//	if (World != nullptr)
+		//	{
+		//		const FVector MuzzleLocation = WeaponMeshComponent->GetSocketLocation(MuzzleSocketName);
+		//		// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+		//		const FRotator ShotTargetDirection = UKismetMathLibrary::FindLookAtRotation(MuzzleLocation, TraceEnd);
 
-		/*if (WeaponInfo.ProjectileClass)
+		//		//Set Spawn Collision Handling Override
+		//		FActorSpawnParameters ActorSpawnParams;
+		//		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+
+		//		// spawn the projectile at the muzzle
+		//		World->SpawnActor<ADSTempBullet>(ProjectileClass, MuzzleLocation, ShotTargetDirection, ActorSpawnParams);
+
+		//	}
+		//}
+
+		if (WeaponInfo.ProjectileClass)
 		{
 			const FVector MuzzleLocation = WeaponMeshComponent->GetSocketLocation(MuzzleSocketName);
 			const FRotator ShotTargetDirection = UKismetMathLibrary::FindLookAtRotation(MuzzleLocation, TraceEnd);
 
-			AMultiShootGameProjectileBase* Projectile = GetWorld()->SpawnActor<AMultiShootGameProjectileBase>(
+			ADSProjectileBase* Projectile = GetWorld()->SpawnActor<ADSProjectileBullet>(
 				WeaponInfo.ProjectileClass, MuzzleLocation, ShotTargetDirection);
+
+			// DSHelper::Debug(FString::Printf(TEXT("SpawnActor:: ADSProjectileBase")), 5);
 			Projectile->SetOwner(GetOwner());
 			Projectile->ProjectileInitialize(WeaponInfo.BaseDamage);
-		}*/
+		}
 
 		if (SPCharacter->GetWeaponMode() != EWeaponMode::SecondWeapon && BulletShellClass)
 		{

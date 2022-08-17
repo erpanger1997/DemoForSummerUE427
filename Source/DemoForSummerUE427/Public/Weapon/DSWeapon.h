@@ -95,6 +95,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Weapon)
 		TSubclassOf<ADSMagazineClip> MagazineClipClass;
 
+	/** Projectile class to spawn */
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
+		TSubclassOf<class ADSTempBullet> ProjectileClass;
+
 	FTimerHandle TimerHandle;
 
 	float LastFireTime;

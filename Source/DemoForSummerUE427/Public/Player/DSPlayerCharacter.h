@@ -16,6 +16,8 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UDSHitEffectComponent;
+class UDSHealthComponent;
 
 UCLASS()
 class DEMOFORSUMMERUE427_API ADSPlayerCharacter : public ACharacter
@@ -34,6 +36,9 @@ public:
 
 	void BeginReload();
 
+	USceneComponent* GetFPSCameraSceneComponent() const;
+
+	UCameraComponent* GetCameraComponent() const;
 	
 
 	bool GetAimed() const;
@@ -42,7 +47,7 @@ public:
 
 	void SetEnableMovement(bool Value);
 
-	//UHealthComponent* GetHealthComponent() const;
+	UDSHealthComponent* GetHealthComponent() const;
 
 protected:
 
@@ -119,9 +124,9 @@ private:
 	UFUNCTION(BlueprintCallable)
 		bool CheckStatus(bool CheckAimed, bool CheckThrowGrenade);	//	 ×´Ì¬¼ì²é
 
-	/*UFUNCTION()
-		void OnHealthChanged(UHealthComponent* OwningHealthComponent, float Health, float HealthDelta,
-			const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);*/
+	UFUNCTION()
+		void OnHealthChanged(UDSHealthComponent* OwningHealthComponent, float Health, float HealthDelta,
+			const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 
 	void BeginThrowGrenade();				// ¿ªÊ¼ÈÓÀ×
@@ -156,13 +161,10 @@ private:
 	UFUNCTION(BlueprintCallable)
 		void Death();						// ËÀÍö
 
+
 public:
 
 	class ADSPlayerController* SPController;
-
-	USceneComponent* GetFPSCameraSceneComponent() const;
-
-	UCameraComponent* GetCameraComponent() const;
 
 	UPROPERTY(BlueprintReadOnly)
 		ADSWeapon* CurrentMainWeapon;
@@ -206,11 +208,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
 		UAudioComponent* DeathAudioComponent;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		UHealthComponent* HealthComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
+		UDSHealthComponent* HealthComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components)
-		UHitEffectComponent* HitEffectComponent;*/
+		UDSHitEffectComponent* HitEffectComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Character)
 		TSubclassOf<ADSWeapon> MainWeaponClass;
